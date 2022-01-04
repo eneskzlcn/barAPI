@@ -33,12 +33,18 @@ func TestIGetTimesFromPingPostSuccessfully(t *testing.T){
 
 	req := httptest.NewRequest(http.MethodPost,"/ping", strings.NewReader(string(testRequestAsByte)))
 	req.Header.Set(fiber.HeaderContentType,fiber.MIMEApplicationJSON)
+
 	var resp *http.Response
 	resp ,err = app.Test(req,1)
 	if err != nil {
 		t.Fatal(err)
 	}
-	body,_ := ioutil.ReadAll(resp.Body)
+
+	var body []byte
+	body,err = ioutil.ReadAll(resp.Body)
+	if err != nil{
+		t.Fatal(err)
+	}
 	resentRequest := Request{}
 	err = json.Unmarshal(body,&resentRequest)
 	if err != nil {
@@ -79,9 +85,18 @@ func TestIProducePongsAsManyAsGivenTimes(t *testing.T){
 	}
 	req := httptest.NewRequest(http.MethodPost,"/ping",strings.NewReader(string(testRequestAsByte)))
 	req.Header.Set(fiber.HeaderContentType,fiber.MIMEApplicationJSON)
-	resp,_ := app.Test(req,1)
-	body,_ := ioutil.ReadAll(resp.Body)
 
+	var resp *http.Response
+	resp,err = app.Test(req,1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var body []byte
+	body,err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
 	sentPongsResponse := PongsResponse{}
 	err = json.Unmarshal(body,&sentPongsResponse)
 	if err != nil {

@@ -1,15 +1,15 @@
 package main
 
 import (
-	"encoding/json"
-	"github.com/gofiber/fiber/v2"
-	"github.com/stretchr/testify/assert"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"net/http/httptest"
-	"strings"
-	"testing"
+		"encoding/json"
+		"github.com/gofiber/fiber/v2"
+		"github.com/stretchr/testify/assert"
+		"io/ioutil"
+		"log"
+		"net/http"
+		"net/http/httptest"
+		"strings"
+		"testing"
 )
 
 func handleErr(t *testing.T, err error) {

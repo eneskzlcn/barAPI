@@ -10,7 +10,11 @@ import (
 	"strings"
 	"testing"
 )
-
+func handleErr(t *testing.T,err error){
+	if err != nil{
+		t.Fatal(err)
+	}
+}
 func TestIGetTimesFromPingPostSuccessfully(t *testing.T){
 	type Request struct{
 		Times int `json:"times"`
@@ -27,29 +31,21 @@ func TestIGetTimesFromPingPostSuccessfully(t *testing.T){
 	})
 
 	testRequestAsByte,err := json.Marshal(testRequest)
-	if err != nil {
-		t.Fatal(err)
-	}
+	handleErr(t,err)
 
 	req := httptest.NewRequest(http.MethodPost,"/ping", strings.NewReader(string(testRequestAsByte)))
 	req.Header.Set(fiber.HeaderContentType,fiber.MIMEApplicationJSON)
 
 	var resp *http.Response
 	resp ,err = app.Test(req,1)
-	if err != nil {
-		t.Fatal(err)
-	}
+	handleErr(t,err)
 
 	var body []byte
 	body,err = ioutil.ReadAll(resp.Body)
-	if err != nil{
-		t.Fatal(err)
-	}
+	handleErr(t,err)
 	resentRequest := Request{}
 	err = json.Unmarshal(body,&resentRequest)
-	if err != nil {
-		t.Fatal(err)
-	}
+	handleErr(t,err)
 
 	assert.Equalf(t, resentRequest.Times,testRequest.Times,"Sended times came correctly to the api")
 }
@@ -80,27 +76,19 @@ func TestIProducePongsAsManyAsGivenTimes(t *testing.T){
 		return ctx.JSON(pongsResponse)
 	})
 	testRequestAsByte,err := json.Marshal(testRequest)
-	if err != nil {
-		t.Fatal(err)
-	}
+	handleErr(t,err)
 	req := httptest.NewRequest(http.MethodPost,"/ping",strings.NewReader(string(testRequestAsByte)))
 	req.Header.Set(fiber.HeaderContentType,fiber.MIMEApplicationJSON)
 
 	var resp *http.Response
 	resp,err = app.Test(req,1)
-	if err != nil {
-		t.Fatal(err)
-	}
+	handleErr(t,err)
 
 	var body []byte
 	body,err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
+	handleErr(t,err)
 	sentPongsResponse := PongsResponse{}
 	err = json.Unmarshal(body,&sentPongsResponse)
-	if err != nil {
-		t.Fatal(err)
-	}
+	handleErr(t,err)
 	assert.Equalf(t, len(sentPongsResponse.Pongs),3,"Pongs response that contains 'pong' word amount of given count")
 }

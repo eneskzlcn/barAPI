@@ -1,3 +1,5 @@
+//go:build unitTest
+
 package main
 
 import (

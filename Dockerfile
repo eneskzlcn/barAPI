@@ -1,7 +1,8 @@
-FROM    golang:1.17.0-alpine3.14
+FROM    golang:1.18-alpine3.16
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
-RUN go mod tidy -go=1.16 && go mod tidy -go=1.17
-RUN go build -o bin/main main.go
-CMD [ "bin/main" ]
+RUN go mod tidy -go=1.18
+RUN go build -o bin/ping-pong ./cmd/ping-pong
+EXPOSE 4200
+CMD [ "bin/ping-pong" ]
